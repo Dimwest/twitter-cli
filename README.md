@@ -1,7 +1,7 @@
 # twitter-cli
 Python CLI fetching data on Twitter
 
-##Configuration
+## Configuration
 
 - Create virtualenv running the following command:
 ```make venv```

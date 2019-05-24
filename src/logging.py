@@ -1,7 +1,7 @@
 import logging
 from time import time
 from colorama import Fore, Style
-
+from typing import Callable, Any
 
 logger = logging.getLogger()
 logger.setLevel(logging.INFO)
@@ -20,8 +20,14 @@ ch.setFormatter(formatter)
 logger.addHandler(ch)
 
 
-def with_logging(func):
-    def wrapper(*args, **kwargs):
+def with_logging(func: Callable) -> Callable:
+
+    """
+    Decorator used for logging functions execution
+    :param func: function to decorate
+    """
+
+    def wrapper(*args, **kwargs) -> Any:
         logger.info(f'{Fore.YELLOW}Running: {func.__name__}{Style.RESET_ALL}')
         ts = time()
         try:

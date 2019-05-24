@@ -4,10 +4,10 @@ from configparser import ConfigParser
 from pathlib import Path
 from src.twitter import fetch_tweets
 from src.logging import with_logging
-from src.postgres import init_db, insert_data
+from src.postgres import init_db, insert_tweets
 
 
-class TwitterFetcher(object):
+class TwitterCLI(object):
 
     @with_logging
     def fetch(self, user: str, n: int=5) -> None:
@@ -34,8 +34,8 @@ class TwitterFetcher(object):
         # Initialize database and insert records fetched
         with engine.connect() as conn:
             init_db(conn)
-            insert_data(conn, fetch_tweets(user, n, api_cfg))
+            insert_tweets(conn, fetch_tweets(user, n, api_cfg))
 
 
 if __name__ == '__main__':
-    fire.Fire(TwitterFetcher)
+    fire.Fire(TwitterCLI)

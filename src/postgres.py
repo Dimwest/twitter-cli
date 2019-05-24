@@ -4,13 +4,16 @@ from src.logging import logger
 from src.tables import Base, schema_name, Tweet
 from colorama import Fore, Style
 from typing import Dict, Iterable
+from sqlalchemy.engine.base import Connection
 
 
-def init_db(conn) -> None:
+def init_db(conn: Connection) -> None:
+
     """
-    Initializes database state:
-        -> Verifies existence of target database table and schema
-        -> If schema or table does not exists, creates it/them
+    Configures the target schema in which the tweets data will be stored,
+    creates the schema and the table if not existing yet
+
+    :param conn: SQLAlchemy connection object
     """
 
     logger.info(f"{Fore.YELLOW}Initializing database ...{Style.RESET_ALL}")
@@ -30,15 +33,17 @@ def init_db(conn) -> None:
     logger.info(f"{Fore.GREEN}Schema {schema_name} successfully configured !{Style.RESET_ALL}")
 
 
-def insert_data(conn, fetch_data: Iterable[Dict]) -> None:
+def insert_tweets(conn: Connection, fetch_data: Iterable[Dict]) -> None:
+
+    """
+    Inserts fetched tweet data to the target database table
+
+    :param conn: SQLAlchemy connection object
+    :param fetch_data: generator containing fetched tweet data
+    """
 
     s = Session(bind=conn)
     meta = MetaData()
     meta.reflect(bind=conn)
     s.add_all([Tweet(**t) for t in fetch_data])
     s.commit()
-
-
-def calculate_aggregate(conn) -> None:
-
-    pass
